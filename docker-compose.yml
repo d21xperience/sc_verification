@@ -1,0 +1,69 @@
+version: '3.8'
+services:
+  auth-service:
+    build:
+      context: ./Backend/auth-service
+    ports:
+      - "8081:8080"
+    environment:
+      POSTGRES_URL: postgres://user:password@db-auth:5432/authdb
+    depends_on:
+      - db-auth
+
+  sc-service:
+    build:
+      context: ./Backend/sc-service
+    ports:
+      - "8082:8080"
+    environment:
+      POSTGRES_URL: postgres://user:password@db-sc:5432/scdb
+    depends_on:
+      - db-sc
+
+  sekolah:
+    build:
+      context: ./Backend/sekolah
+    ports:
+      - "8083:8080"
+    environment:
+      POSTGRES_URL: postgres://user:password@db-sekolah:5432/sekolahdb
+    depends_on:
+      - db-sekolah
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+
+  db-auth:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: authdb
+    volumes:
+      - db-auth-data:/var/lib/postgresql/data
+
+  db-sc:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: scdb
+    volumes:
+      - db-sc-data:/var/lib/postgresql/data
+
+  db-sekolah:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: sekolahdb
+    volumes:
+      - db-sekolah-data:/var/lib/postgresql/data
+
+volumes:
+  db-auth-data:
+  db-sc-data:
+  db-sekolah-data:
