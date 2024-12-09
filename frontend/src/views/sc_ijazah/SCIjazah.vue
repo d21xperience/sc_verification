@@ -141,33 +141,18 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
-
-import FileUpload from 'primevue/fileupload';
-
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-
 import Button from 'primevue/button';
-
 import Dialog from 'primevue/dialog';
-
 import Toolbar from 'primevue/toolbar';
-
-import ColumnGroup from 'primevue/columngroup';   // optional
-import Row from 'primevue/row';                   // optional
-
-import { ref, onMounted } from 'vue';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
-
 import InputText from 'primevue/inputtext';
-
-
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
-
-import RadioButton from 'primevue/radiobutton';
 
 // import DataLulusanService from '@/service/DataLulusanService.js';
 // Fungsi untuk mendapatkan semua siswa
@@ -217,11 +202,7 @@ const formatDate = (isoDate) => {
     const month = String(date.getMonth() + 1).padStart(2, "0"); // Ambil bulan (0-indexed, tambah 1) dengan 2 digit
     const year = date.getFullYear(); // Ambil tahun
     return `${day}-${month}-${year}`; // Gabungkan menjadi format dd-mm-yyyy
-};
-// onMounted(() => {
-//     DataLulusanService.getProducts().then((data) => (products.value = data));
-// });
-
+}
 const toast = useToast()
 const dt = ref()
 const students = ref()

@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"log"
+	"sc-service/model"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -25,21 +26,21 @@ func InitDatabase() {
 	if err != nil {
 		log.Fatal("Terjadi error dg error sbb: ", err)
 	}
-	// DB.AutoMigrate(
-	// 	&model.BlockchainNetwork{},
-	// 	&model.EthereumQuorumSetting{},
-	// 	&model.HyperledgerFabricSetting{},
-	// 	&model.Node{},
-	// 	&model.NetworkParticipant{},
-	// 	&model.Block{},
-	// 	&model.User{},
-	// 	&model.Transaction{},
-	// 	&model.AuditLog{},
-	// 	&model.Account{},
-	// )
-	// DB.AutoMigrate(&model.IPFSMetadata{}, &model.IPFSNode{}, &model.IPFSFile{}, &model.IPFSTransaction{}, &model.IPFSPinningService{})
+	DB.AutoMigrate(
+		&model.BlockchainNetwork{},
+		&model.EthereumQuorumSetting{},
+		&model.HyperledgerFabricSetting{},
+		&model.Node{},
+		&model.NetworkParticipant{},
+		&model.Block{},
+		&model.User{},
+		&model.Transaction{},
+		&model.AuditLog{},
+		&model.Account{},
+	)
+	DB.AutoMigrate(&model.IPFSMetadata{}, &model.IPFSNode{}, &model.IPFSFile{}, &model.IPFSTransaction{}, &model.IPFSPinningService{})
 
-	// DB.AutoMigrate(&model.Student{}, &model.Certificate{})
+	DB.AutoMigrate(&model.Student{}, &model.Certificate{})
 	log.Println("Database connected successfully!")
 }
 

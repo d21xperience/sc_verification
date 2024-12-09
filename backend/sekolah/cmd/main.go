@@ -5,12 +5,28 @@ import (
 	"net/http"
 	"sekolah/controllers"
 	"sekolah/routes"
+	"time"
+
+	"myproject/shared/db"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	// Konfigurasi database dengan connection pooling
+	dbConfig := db.Config{
+		Host:            "localhost",
+		Port:            5432,
+		User:            "postgres",
+		Password:        "",
+		DBName:          "seckolahdb",
+		MaxIdleConns:    10,               // Maksimum 10 koneksi idle
+		MaxOpenConns:    100,              // Maksimum 100 koneksi total
+		ConnMaxLifetime: 30 * time.Minute, // Koneksi direset setiap 30 menit
+	}
 
+	// Inisialisasi database
+	db.InitDatabase(dbConfig)
 	// var dataLogin service.DataDapo
 	// dataLogin.BaseURL = "http://localhost:5774"
 	// dataLogin.Username = "d21xperience@gmail.com"

@@ -1,15 +1,17 @@
 <script setup>
 import { ref, watch } from "vue";
+import Toast from 'primevue/toast';
 // import TheWelcome from '../components/Utama.vue'
 import Navbar from '../components/Navbar.vue';
-import AutoComplete from 'primevue/autocomplete';
 
-import Button from 'primevue/button';
+import { useToast } from 'primevue/usetoast';
 
-import Carousel from 'primevue/carousel';
-import Tag from 'primevue/tag';
+const toast = useToast();
 
 
+const show = () => {
+  toast.add({ severity: 'info', summary: 'Info', detail: 'Message Content', life: 3000 });
+};
 
 
 
@@ -102,7 +104,13 @@ const searchStudent = async () => {
     error.value = err.response?.data?.error || "An error occurred while fetching data.";
   }
 }
+const dlg = ref(false)
 
+import Dialog from 'primevue/dialog';
+import Captcha from "@/components/Captcha.vue";
+const showRobot = () => {
+  dlg.value = !dlg.value
+}
 </script>
 
 <template>
@@ -146,13 +154,20 @@ const searchStudent = async () => {
       </form>
     </div> -->
 
+    <Toast />
+    <button @click="show()">Show</button>
+
+    <div v-show="dlg">
+
+      <Captcha />
+    </div>
     <!-- SECTION -1  -->
     <!-- <div class="bg-blue-100"> -->
-    <div class="bg-gray-900 ">
+    <div class="bg-slate-800 ">
       <div class="container mx-auto p-4">
         <div class=" p-8 flex flex-wrap">
           <div class="lg:w-1/2 w-full mb-12">
-            <h1 class="text-3xl font-bold mb-4 text-slate-50">
+            <h1 class="font-sans text-3xl font-bold mb-4 text-slate-50">
               Verifikasi Ijazah Dasar & Menengah
             </h1>
 
@@ -160,7 +175,11 @@ const searchStudent = async () => {
               <!-- Input untuk query -->
               <label for="cari-data" class="text-white">Masukan NISN atau NIK</label>
               <input v-model="query" placeholder="Enter NISN or NIK" type="text"
-                class="mt-1 p-2 w-full border rounded mb-4" />
+                class="mt-1 p-2 w-full border rounded" />
+              <div class="flex items-center gap-2 my-3">
+                <button @click="showRobot" class="bg-white" type="button">&nbsp;&nbsp;</button>
+                <label for="size_large" class="text-lg text-white">Saya bukan robot</label>
+              </div>
               <!-- <button @click="searchStudent" class="bg-white text-black border p-2 rounded-full">Search</button> -->
               <button @click="searchStudent" :disabled="query.length === 0"
                 :class="{ 'opacity-25 cursor-not-allowed hover:bg-slate-500': query.length === 0 }"
@@ -261,7 +280,55 @@ const searchStudent = async () => {
 
     <!-- END SECTION -1  -->
 
-
+    <!-- <div class="bg-gray-800 p-4 rounded-lg shadow-lg w-80">
+      <div class="flex justify-between items-center text-white mb-4">
+        <span>
+          Select in this order:
+        </span>
+        <div class="flex space-x-2">
+          <i class="fas fa-star">
+          </i>
+          <i class="fas fa-calendar-alt">
+          </i>
+          <i class="fas fa-shopping-cart">
+          </i>
+        </div>
+      </div>
+      <div class="relative mb-4">
+        <img alt="A serene night landscape with a tree reflected in water" class="rounded-lg w-full" height="180"
+          src="https://storage.googleapis.com/a1aa/image/VUgCU0IKDhauLlnhaCBtVtjbxH8CZWdZGzA3Ky1xW7pOXe7JA.jpg"
+          width="320">
+        <div class="absolute top-2 left-2">
+          <div class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
+            <i class="fas fa-alarm-clock">
+            </i>
+          </div>
+        </div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div class="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
+            <i class="fas fa-calendar-alt">
+            </i>
+          </div>
+        </div>
+        <div class="absolute bottom-2 right-2">
+          <div class="bg-teal-500 text-white rounded-full w-8 h-8 flex items-center justify-center">
+            <i class="fas fa-shopping-cart">
+            </i>
+          </div>
+        </div>
+      </div>
+      <button class="bg-blue-600 text-white py-2 px-4 rounded-lg w-full">
+        Apply
+      </button>
+      <div class="flex justify-between items-center text-gray-400 mt-4">
+        <i class="fas fa-times">
+        </i>
+        <i class="fas fa-sync-alt">
+        </i>
+        <i class="fas fa-info-circle">
+        </i>
+      </div>
+    </div> -->
 
 
 

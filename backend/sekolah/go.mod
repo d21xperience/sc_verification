@@ -2,13 +2,16 @@ module sekolah
 
 go 1.22.3
 
+replace myproject/shared/db => ../shared/db
+
 require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/uuid v1.4.0
 	github.com/spf13/viper v1.19.0
 	golang.org/x/net v0.25.0
-	gorm.io/driver/postgres v1.5.9
-	gorm.io/gorm v1.25.11
+	gorm.io/driver/postgres v1.5.11
+	gorm.io/gorm v1.25.12
+	myproject/shared/db v0.0.0-00010101000000-000000000000
 )
 
 require (

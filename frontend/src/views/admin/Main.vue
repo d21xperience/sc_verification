@@ -65,10 +65,17 @@ const items = ref([
         icon: 'pi pi-ethereum',
         items: [
             {
-                label: 'Your wallet',
+                label: 'Dompet Digital',
                 icon: 'pi pi-wallet',
                 command: () => {
                     router.push({ name: 'setingBlockchain' })
+                }
+            },
+            {
+                label: 'Daftar Jaringan',
+                icon: 'pi pi-cloud',
+                command: () => {
+                    router.push({ name: 'listBCNetwork' })
                 }
             },
             {

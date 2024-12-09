@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 library.add(fas, fab);
 const app = createApp(App);
 
-app.component("font-awesome-icon", FontAwesomeIcon);
+// app.component("font-awesome-icon", FontAwesomeIcon);
 app.use(router);
 app.use(PrimeVue, {
   theme: {
@@ -29,7 +29,7 @@ app.use(PrimeVue, {
 app.use(ToastService);
 app.use(DialogService);
 
-app.use(VueRecaptchaPlugin, {
-  v3SiteKey: "6LfuuYgqAAAAAOPnPbRKpJM3DWOyEy2rJagWTb0V",
-});
+// app.use(VueRecaptchaPlugin, {
+//   v3SiteKey: "6LfuuYgqAAAAAOPnPbRKpJM3DWOyEy2rJagWTb0V",
+// });
 app.mount("#app");

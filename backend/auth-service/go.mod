@@ -2,13 +2,16 @@ module auth-service
 
 go 1.22.3
 
+replace myproject/shared/db => ../shared/db
+
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-faker/faker/v4 v4.5.0
 	golang.org/x/crypto v0.27.0
-	gorm.io/driver/postgres v1.5.10
+	gorm.io/driver/postgres v1.5.11
 	gorm.io/gorm v1.25.12
+	myproject/shared/db v0.0.0-00010101000000-000000000000
 )
 
 require (

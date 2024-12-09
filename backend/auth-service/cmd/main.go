@@ -6,13 +6,31 @@ import (
 	"auth-service/repository"
 	"auth-service/service"
 	"auth-service/util"
+	"time"
+
+	"myproject/shared/db"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	// Setup database
-	config.InitDatabase()
+	// Konfigurasi database dengan connection pooling
+	dbConfig := db.Config{
+		Host:            "localhost",
+		Port:            5432,
+		User:            "postgres",
+		Password:        "",
+		DBName:          "authdb",
+		MaxIdleConns:    10,               // Maksimum 10 koneksi idle
+		MaxOpenConns:    100,              // Maksimum 100 koneksi total
+		ConnMaxLifetime: 30 * time.Minute, // Koneksi direset setiap 30 menit
+	}
+
+	// Inisialisasi database
+	db.InitDatabase(dbConfig)
+
+	// config.InitDatabase()
 	// defer config.DB.Close()
 
 	// Initialize repositories

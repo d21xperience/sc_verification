@@ -7,14 +7,15 @@ import (
 type BlockchainNetwork struct {
 	NetworkID      uint      `gorm:"primaryKey;autoIncrement" json:"network_id"`
 	NetworkName    string    `gorm:"size:100" json:"network_name"`
-	BlockchainType string    `gorm:"size:50" json:"blockchain_type"` // Ethereum, Quorum, Fabric
+	BlockchainType string    `gorm:"size:50" json:"blockchain_type"` // public atau private
 	Description    string    `gorm:"type:text" json:"description"`
-	CreatedAt      time.Time `gorm:"autoCreateTime" json:"created_at"`
-	UpdatedAt      time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 	Unit           string    `gorm:"size:10" json:"unit"`            // ETH, USD, etc
 	BlockExplorer  string    `gorm:"size:255" json:"block_explorer"` // URL block explorer
 	RPCURL         string    `gorm:"size:255" json:"rpc_url"`
 	ChainID        int       `json:"chain_id"`
+	CreatedAt      time.Time `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt      time.Time `gorm:"autoUpdateTime" json:"updated_at"`
+	Activate       bool      `gorm:"default:false" json:"activate"`
 	// Relationships
 	EthereumQuorumSettings    EthereumQuorumSetting    `gorm:"foreignKey:NetworkID"`
 	HyperledgerFabricSettings HyperledgerFabricSetting `gorm:"foreignKey:NetworkID"`

@@ -23,6 +23,10 @@ func (ac *AccountController) CreateAccount(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	// Panggil fungsi untuk menambahkan akun baru blockhain
+	// walletInfo := ethbc.ETHClientInfo{
+	// 	NetURL: "",
+	// }
 
 	if err := ac.DB.Create(&account).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -90,3 +94,13 @@ func (ac *AccountController) DeleteAccount(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Account deleted"})
 }
+
+// // Set Active account
+// func (ac *AccountController) SetAccountActive(c *gin.Context) {
+
+// }
+
+// // Set Import account
+// func (ac *AccountController) ImportAccount(c *gin.Context) {
+
+// }

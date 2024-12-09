@@ -72,6 +72,11 @@ const router = createRouter({
               ],
             },
             {
+              path: "list-bcnetwork",
+              name: "listBCNetwork",
+              component: () => import("../views/sc_ijazah/ListBCNetwork.vue"),
+            },
+            {
               path: "add-bcnetworks",
               name: "addBCNetworks",
               component: () => import("../views/sc_ijazah/AddBCNetwork.vue"),
