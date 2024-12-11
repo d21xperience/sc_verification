@@ -65,8 +65,8 @@ const items = ref([
         icon: 'pi pi-ethereum',
         items: [
             {
-                label: 'Dompet Digital',
-                icon: 'pi pi-wallet',
+                label: 'Seting',
+                icon: 'pi pi-cog',
                 command: () => {
                     router.push({ name: 'setingBlockchain' })
                 }

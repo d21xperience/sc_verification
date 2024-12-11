@@ -5,17 +5,22 @@ import (
 )
 
 type BlockchainNetwork struct {
-	NetworkID      uint      `gorm:"primaryKey;autoIncrement" json:"network_id"`
-	NetworkName    string    `gorm:"size:100" json:"network_name"`
-	BlockchainType string    `gorm:"size:50" json:"blockchain_type"` // public atau private
-	Description    string    `gorm:"type:text" json:"description"`
-	Unit           string    `gorm:"size:10" json:"unit"`            // ETH, USD, etc
-	BlockExplorer  string    `gorm:"size:255" json:"block_explorer"` // URL block explorer
-	RPCURL         string    `gorm:"size:255" json:"rpc_url"`
-	ChainID        int       `json:"chain_id"`
-	CreatedAt      time.Time `gorm:"autoCreateTime" json:"created_at"`
-	UpdatedAt      time.Time `gorm:"autoUpdateTime" json:"updated_at"`
-	Activate       bool      `gorm:"default:false" json:"activate"`
+	NetworkID      uint   `gorm:"primaryKey;autoIncrement" json:"network_id"`
+	NetworkName    string `gorm:"size:100" json:"network_name"`
+	BlockchainType string `gorm:"size:50" json:"blockchain_type"` // public atau private
+	Description    string `gorm:"type:text" json:"description"`
+	Unit           string `gorm:"size:10" json:"unit"`            // ETH, USD, etc
+	BlockExplorer  string `gorm:"size:255" json:"block_explorer"` // URL block explorer
+	RPCURL         string `gorm:"size:255" json:"rpc_url"`
+	ChainID        int    `json:"chain_id"`
+	// kolom Activate digunakan untuk menampilkan jaringan pada saat pemilihan jaringan
+	Activate bool `gorm:"default:false" json:"activate"`
+	// kolom NetworkAvailable digunakan jika logic bisnis sudah dibuat, saat ini baru tersedia ethereum, quorum dan hyperledger fabric
+	NetworkAvailable bool `gorm:"default:false" json:"network_available"`
+	// kolom Applicable digunakan pada saat membukan blockchain setting digunakan untuk menampilkan jaringan secara default
+	Applicable bool      `gorm:"default:false" json:"applicable"`
+	CreatedAt  time.Time `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt  time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 	// Relationships
 	EthereumQuorumSettings    EthereumQuorumSetting    `gorm:"foreignKey:NetworkID"`
 	HyperledgerFabricSettings HyperledgerFabricSetting `gorm:"foreignKey:NetworkID"`
@@ -25,9 +30,9 @@ type BlockchainNetwork struct {
 }
 
 type EthereumQuorumSetting struct {
-	SettingID uint    `gorm:"primaryKey;autoIncrement" json:"setting_id"`
-	NetworkID uint    `gorm:"index" json:"network_id"`
-	RpcURL    string  `gorm:"size:255" json:"rpc_url"`
+	SettingID uint `gorm:"primaryKey;autoIncrement" json:"setting_id"`
+	NetworkID uint `gorm:"index" json:"network_id"`
+	// RpcURL    string  `gorm:"size:255" json:"rpc_url"`
 	ChainID   int     `json:"chain_id"`
 	GasPrice  float64 `gorm:"type:numeric(20,8)" json:"gas_price"`
 	BlockTime int     `json:"block_time"`

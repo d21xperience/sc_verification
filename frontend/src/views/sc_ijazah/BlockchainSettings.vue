@@ -122,7 +122,7 @@ const networkActive = ref(false)
 const networkName = ref(null)
 const networkIndex = ref(0)
 const selectNetwork = (e) => {
-    console.log(e.target.value)
+    // console.log(e.target.value)
     networkIndex.value = e.target.value
     const text = e.target.textContent.trim();
     console.log(text);
@@ -145,18 +145,22 @@ const fetchBlockchainNetworks = async () => {
             .then(response => {
                 console.log(response.data)
                 BCPlatform.value = response.data
+                BCPlatform.value.forEach((bc, i) => {
+                    // console.log(bc.applicable)
+                    if (bc.activate) {
+                        if (bc.applicable) {
+                            console.log(i)
+                            networkActive.value = true
+                            networkIndex.value = i
+                        }
+                    }
+                })
             })
     } catch (error) {
-        console.error('Error fetching Ethereum price:', error);
+        console.error('Error connecting to blockchain network:', error);
 
     }
 }
-
-
-
-
-
-
 // Mempersingkat address
 const shortenText = (text) => {
     if (text.length <= 10) return text; // Tidak dipersingkat jika terlalu pendek
@@ -239,12 +243,13 @@ const createAccount = async () => {
             </div>
             <div v-show="networkActive" class="flex items-center">
                 <button class="bg-red-400 py-2 px-3 rounded-full hover:opacity-70 flex items-center gap-2"
-                    @click="networkActive = false"><i class="pi pi-times"></i> Tutup</button>
+                    @click="networkActive = false"><i class="pi pi-times"></i> Disconect</button>
             </div>
         </div>
     </div>
     <div class="p-4">
         <template v-if="networkActive">
+            <h3 class="text-center font-bold text-3xl">{{ BCPlatform[networkIndex].network_name }} </h3>
             <div>
                 <template v-if="BCPlatform[networkIndex].accounts.length > 1">
                     <div class="text-center">
@@ -396,17 +401,14 @@ const createAccount = async () => {
                     </div>
                 </template>
                 <template v-else>
-                    <h2 class="text-center text-2xl">Anda belum mempunyai wallet, silakan buat wallet terlebih dahulu
+                    <h2 class="text-center text-2xl">Anda belum mempunyai akun, silakan buat akun terlebih dahulu
                     </h2>
                     <div class="flex justify-center mt-6">
-                        <Button @click="dialogCreateAccount = true" icon="pi pi-wallet" aria-label="addAccount"
-                            label="Buat Wallet" rounded style="background-color:orange;border: none; color:black" />
+                        <Button @click="dialogCreateAccount = true" icon="pi pi-user" aria-label="addAccount"
+                            label="Buat Akun" rounded style="background-color:orange;border: none; color:black" />
                     </div>
                 </template>
-
             </div>
-
-
         </template>
         <template v-else>
             <div class="text-center">

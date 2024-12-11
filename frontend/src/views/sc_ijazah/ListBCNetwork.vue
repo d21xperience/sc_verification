@@ -13,6 +13,8 @@
                 <Button label="Delete" icon="pi pi-trash" severity="danger" class="mr-2" @click="confirmDeleteSelected"
                     :disabled="!selectedBCNetworks || !selectedBCNetworks.length" />
                 <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)" class="mr-2" />
+                <Button label="Aktifkan" icon="pi pi-upload" severity="help" @click="activeBCNetworkDialog = true"
+                    class="mr-2" />
             </template>
         </Toolbar>
 
@@ -47,8 +49,11 @@
             </Column>
             <Column field="activate" header="Active" sortable>
                 <template #body="slotProps">
-                    <button @click="activeBCNetworkDialog = true" class="rounded-full border border-slate-500 w-4 h-4"
-                        :class="{ 'bg-green-800': slotProps.data.activate }"></button>
+                    <!-- <button @click="activeBCNetworkDialog = true" class="rounded-full border border-slate-500 w-4 h-4"
+                        :class="{ 'bg-green-800': slotProps.data.activate }"></button> -->
+                    <div class="rounded-full border border-slate-500 w-4 h-4"
+                        :class="{ 'bg-green-800': slotProps.data.activate }"></div>
+
                 </template>
             </Column>
             <Column field="blockchain_type" header="Tipe Jaringan" sortable>
@@ -500,5 +505,18 @@ const activeBCNetwork = ref(null);
 const activeBCNetworkDialog = ref(false);
 const activingBcNetwork = () => {
     activeBCNetworkDialog.value = !activeBCNetworkDialog.value
+    let tes = ''
+    selectedBCNetworks.value.forEach(bc => {
+        console.log(bc.chain_id)
+        if (bc.chain_id != 1 && bc.chain_id != 12) {
+
+            tes =  "Jaringan belum tersedia"
+        } else {
+            tes = "Jaringan sudah tersedia"
+        }
+
+    });
+    selectedBCNetworks.value = null
+    console.log(tes)
 }
 </script>
