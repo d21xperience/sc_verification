@@ -64,7 +64,7 @@ const register = async () => {
 
 
 <template>
-    <div class=" bg-gray-50 flex items-center md:h-screen p-4">
+    <div class=" bg-slate-900 flex items-center md:h-screen p-4">
         <div class="w-full max-w-xl max-md:max-w-xl mx-auto">
             <div class="bg-white grid gap-16 w-full sm:p-8 p-6 shadow-md rounded-md overflow-hidden">
                 <form class="w-full justify-center">

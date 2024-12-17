@@ -9,6 +9,7 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+      meta: { title: "Home" },
     },
     {
       path: "/auth",
@@ -18,11 +19,13 @@ const router = createRouter({
           path: "login",
           name: "login",
           component: () => import("../views/auth/Login.vue"),
+          meta: { title: "Sign In" },
         },
         {
           path: "register",
           name: "register",
           component: () => import("../views/auth/Register.vue"),
+          meta: { title: "Sign Up - Register" },
         },
       ],
     },
@@ -38,16 +41,19 @@ const router = createRouter({
       path: "/admin",
 
       component: () => import("../views/admin/Main.vue"),
+
       children: [
         {
           path: "",
           component: () => import("../views/admin/Dashboard.vue"),
           name: "admin",
+          meta: { title: "Dashboard" },
         },
         {
           path: "profile",
           name: "profile",
           component: () => import("../views/admin/Profile.vue"),
+          meta: { title: "Profile" },
         },
 
         // ----------------------------------------------------------
@@ -61,6 +67,7 @@ const router = createRouter({
             {
               path: "setting",
               name: "setingBlockchain",
+              meta: { title: "Blockhain setting" },
               component: () =>
                 import("../views/sc_ijazah/BlockchainSettings.vue"),
               children: [
@@ -74,6 +81,7 @@ const router = createRouter({
             {
               path: "list-bcnetwork",
               name: "listBCNetwork",
+              meta: { title: "Daftar Blockhain" },
               component: () => import("../views/sc_ijazah/ListBCNetwork.vue"),
             },
             {
@@ -93,6 +101,7 @@ const router = createRouter({
           path: "input-ijazah",
           name: "inputIjazah",
           component: () => import("../views/dapodik/DataSiswa.vue"),
+          meta: { title: "Data Ijazah" },
         },
 
         // Data DAPODIK
@@ -105,21 +114,25 @@ const router = createRouter({
           path: "data-sekolah",
           name: "dapodikSekolah",
           component: () => import("../views/dapodik/DataSekolah.vue"),
+          meta: { title: "Data Sekolah" },
         },
         {
           path: "data-guru",
           name: "dapodikGuru",
           component: () => import("../views/dapodik/DataGuru.vue"),
+          meta: { title: "Data Guru" },
         },
         {
           path: "data-siswa",
           name: "dapodikSiswa",
           component: () => import("../views/dapodik/DataSiswa.vue"),
+          meta: { title: "Data Siswa" },
         },
         {
           path: "data-kelas",
           name: "dapodikKelas",
           component: () => import("../views/dapodik/DataKelas.vue"),
+          meta: { title: "Data Kelas" },
         },
 
         // Data akademik siswa
@@ -127,10 +140,22 @@ const router = createRouter({
           path: "ketuntasan-rapor",
           name: "ketuntasanRapor",
           component: () => import("../views/data_akademik/KetuntasanRapor.vue"),
+          meta: { title: "Ketuntasan Rapor" },
+        },
+        {
+          path: "data-ijazah",
+          name: "dataIjazah",
+          component: () => import("../views/data_akademik/DataIjazah.vue"),
+          meta: { title: "Data Ijazah" },
         },
       ],
     },
   ],
 });
 
+router.beforeEach((to, from, next) => {
+  // document.title = to.name;
+  document.title = to.meta.title || "Default Title";
+  next();
+});
 export default router;

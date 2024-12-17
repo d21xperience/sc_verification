@@ -9,6 +9,7 @@ import (
 
 	"myproject/shared/db"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,8 +26,6 @@ func main() {
 		ConnMaxLifetime: 30 * time.Minute, // Koneksi direset setiap 30 menit
 	}
 
-	// Inisialisasi database
-	db.InitDatabase(dbConfig)
 	// var dataLogin service.DataDapo
 	// dataLogin.BaseURL = "http://localhost:5774"
 	// dataLogin.Username = "d21xperience@gmail.com"
@@ -42,11 +41,25 @@ func main() {
 	// tes := dapo.GetBearer(dataLogin.SekolahID)
 	// fmt.Println(tes)
 	router := gin.Default()
-
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173", "*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+	// router.GET("/api/v1/dapodik", func(c *gin.Context) {
+	// 	c.JSON(200, gin.H{"message": "CORS berhasil!"})
+	// })
+	// router.OPTIONS("/*path", func(c *gin.Context) {
+	// 	c.Status(204) // Menjawab dengan status 204 No Content
+	// })
+	// Inisialisasi database
+	db.InitDatabase(dbConfig)
 	var client = &http.Client{}
-	dapoController := controllers.NewDapodikService(client)
+	dapoController := controllers.NewDapodikClient(client)
 
 	routes.SetupDapodik(router, dapoController)
-	router.Run(":8081")
+	router.Run(":8082")
 
 }

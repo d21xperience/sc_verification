@@ -33,7 +33,6 @@ func InitDatabase() {
 		&model.Node{},
 		&model.NetworkParticipant{},
 		&model.Block{},
-		&model.User{},
 		&model.Transaction{},
 		&model.AuditLog{},
 		&model.Account{},

@@ -47,21 +47,21 @@
                                 </span>
                                 +123 456 7890
                             </p>
-                            <p>
+                            <div>
                                 <span class="font-bold">
                                     Date of Birth:
                                 </span>
-                            <div class="inline-block">
-                                <div v-if="isProfileEdit">
-                                    <DatePicker v-model="akun.biodata.tglLahir" dateFormat="dd/mm/yy"
-                                        :inputClass="{ dateClass: isProfileEdit }" />
-                                </div>
-                                <div v-else>
-                                    {{ akun.biodata.tglLahir }}
-                                </div>
+                                <div class="inline-block">
+                                    <div v-if="isProfileEdit">
+                                        <DatePicker v-model="akun.biodata.tglLahir" dateFormat="dd/mm/yy"
+                                            :inputClass="{ dateClass: isProfileEdit }" />
+                                    </div>
+                                    <div v-else>
+                                        {{ akun.biodata.tglLahir }}
+                                    </div>
 
+                                </div>
                             </div>
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -230,9 +230,10 @@ const editProfile = () => {
 </script>
 
 <style scoped>
-.p-inputext{
+.p-inputext {
     padding: 0;
 }
+
 .editProfileClass {
     color: red
 }

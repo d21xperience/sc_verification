@@ -23,7 +23,8 @@ func main() {
 	// Inisialisasi Database
 	config.InitDatabase()
 	db := config.DB
-	// config.Seed()
+	// config.SeedAccountBC()
+	// config.SeedBCNetworks()
 	// config.SeedStudent()
 	// config.InitETHClient() // Inisialisasi client Ethereum
 	// controller

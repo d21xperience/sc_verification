@@ -8,27 +8,32 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     proxy: {
-      "/api": {
-        target: "https://dapo.kemdikbud.go.id/api",
-        changeOrigin: true,
-        rewrite: (path) => {
-          // console.log(`Proxying request: ${path}`);
-          // console.log(`Proxying request: ${path.replace(/^\/api/, "")}`);
-          return path.replace(/^\/api/, "");
-        },
-        // tambahan
-        // secure: false,
-        // ws: true
-      },
-      "/dapo": {
-        target: "http://localhost:5774",
-        changeOrigin: true,
-        rewrite: (path) => {
-          console.log(`Proxying request: ${path}`);
-          console.log(`Proxying request: ${path.replace(/^\/api/, "")}`);
-          return path.replace(/^\/dapo/, "");
-        },
-      },
+      // "/api": {
+      //   target: "http://localhost:8082",
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/api/, ""),
+      // },
+      // "/api": {
+      //   target: "http://localhost:8082",
+      //   changeOrigin: true,
+      //   rewrite: (path) => {
+      //     // console.log(`Proxying request: ${path}`);
+      //     // console.log(`Proxying request: ${path.replace(/^\/api/, "")}`);
+      //     return path.replace(/^\/api/, "");
+      //   },
+      // tambahan
+      // secure: false,
+      // ws: true
+      // },
+      // "/dapo": {
+      //   target: "http://localhost:5774",
+      //   changeOrigin: true,
+      //   rewrite: (path) => {
+      //     console.log(`Proxying request: ${path}`);
+      //     console.log(`Proxying request: ${path.replace(/^\/api/, "")}`);
+      //     return path.replace(/^\/dapo/, "");
+      //   },
+      // },
     },
   },
   resolve: {

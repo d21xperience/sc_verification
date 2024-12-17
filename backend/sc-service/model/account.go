@@ -14,7 +14,8 @@ type Account struct {
 	// Blockchain   string  `gorm:"not null" json:"blockchain"` // Ethereum, Quorum, Fabric
 	Organization string  `json:"organization,omitempty"` // Untuk Hyperledger Fabric
 	Amount       float64 `json:"amount,omitempty"`
-
+	PublicKey    string  `gorm:"type:text" json:"public_key"`
+	PrivateKey   string  `gorm:"type:text" json:"private_key"`
 	// ammount untuk ethereum
 	IsActive bool `json:"isActive,omitempty"`
 }

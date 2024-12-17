@@ -1,108 +1,109 @@
 <template>
 
-    <div>
+    <div class="container mx-auto p-8">
 
         <div class="card">
             <div class="flex flex-wrap justify-between my-2">
                 <h4 class="font-bold text-2xl lg:text-lg my-2">Data Siswa </h4>
-                <div>
-                    <Select v-model="selectedCity" :options="cities" optionLabel="name" placeholder="Tahun Pelajaran"
-                        class="w-full md:w-56 mr-2" />
-                </div>
+            </div>
+            <div v-if="dataConnected">
+                <Toolbar class="mb-6">
+                    <template #end>
+                        <!-- <Select v-model="selectedCity" :options="cities" optionLabel="name" placeholder="Tahun Pelajaran"
+                            class="w-full md:w-56 mr-2" /> -->
+                        <Select v-model="selectedCity" :options="cities" optionLabel="name"
+                            placeholder="Tahun Pelajaran" class="w-full md:w-56 mr-2" />
+
+                    </template>
+                    <template #start>
+                        <!-- <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" /> -->
+                        <Button label="Edit" icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
+                            :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2" class="mr-2" />
+                        <Button label="Delete" icon="pi pi-trash" severity="danger" class="mr-2"
+                            @click="confirmDeleteSelected" :disabled="!dataLulusan || !dataLulusan.length" />
+
+                        <!-- <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import"
+                            class="mr-2" auto /> -->
+                        <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)"
+                            class="mr-2" />
+                        <Button label="Kirim Blockchain" icon="pi pi-send" severity="help" @click="exportCSV($event)" />
+                    </template>
+                </Toolbar>
+
+                <DataTable ref="dt" v-model:selection="dataLulusan" :value="products" dataKey="id" :paginator="true"
+                    :rows="10" :filters="filters"
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    :rowsPerPageOptions="[5, 10, 25]"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
+                    <template #header>
+                        <div class="flex flex-wrap gap-2 items-center justify-between">
+                            <div class="flex">
+                                <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
+                                    placeholder="Rombel" class="w-full md:w-56 mr-2" />
+                                <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
+                                    placeholder="Kompetensi Keahlian" class="w-full md:w-56 mr-2" />
+                                <IconField>
+                                    <InputIcon>
+                                        <i class="pi pi-search" />
+                                    </InputIcon>
+                                    <InputText v-model="filters['global'].value" placeholder="Search..." />
+                                </IconField>
+                            </div>
+
+                        </div>
+                    </template>
+
+                    <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
+                    <Column field="code" header="NISN"></Column>
+                    <Column field="code" header="NIS" sortable></Column>
+                    <Column field="code" header="Tingkat" sortable></Column>
+                    <Column field="code" header="Rombel" sortable></Column>
+                    <Column field="name" header="Nama" sortable></Column>
+                    <Column field="name" header="JK"></Column>
+                    <Column field="name" header="Tpt.Lahir"></Column>
+                    <Column field="name" header="Tgl.Lahir"></Column>
+                    <Column field="name" header="Agama"></Column>
+                    <!-- <Column field="price" header="Nilai Rerata">
+                        <template #body="slotProps">
+                            {{ formatCurrency(slotProps.data.price) }}
+                        </template>
+                    </Column> -->
+                    <Column field="category" header="Ayah"></Column>
+                    <Column field="category" header="Ibu"></Column>
+                    <Column field="category" header="Pekerjaan Ayah"></Column>
+                    <Column field="category" header="Pekerjaan Ibu"></Column>
+                    <Column field="category" header="Alamat"></Column>
+                    <!-- <Column header="Image">
+                        <template #body="slotProps">
+                            <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
+                                :alt="slotProps.data.image" class="rounded" style="width: 64px" />
+                        </template>
+                    </Column> -->
+                    <!--<Column field="rating" header="Reviews" sortable style="min-width: 12rem">
+                        <template #body="slotProps">
+                            <Rating :modelValue="slotProps.data.rating" :readonly="true" />
+                        </template>
+                    </Column>-->
+                    <Column field="inventoryStatus" header="Status" sortable>
+                        <template #body="slotProps">
+                            <Tag :value="slotProps.data.inventoryStatus"
+                                :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
+                        </template>
+                    </Column>
+                    <!-- <Column header="Aksi" :exportable="false" style="min-width: 12rem">
+                        <template #body="slotProps">
+                            <Button icon="pi pi-pencil" outlined rounded class="mr-2"
+                                @click="editProduct(slotProps.data)" />
+                            <Button icon="pi pi-trash" outlined rounded severity="danger"
+                                @click="confirmDeleteProduct(slotProps.data)" />
+                        </template>
+                    </Column> -->
+                </DataTable>
 
             </div>
-            <Toolbar class="mb-6">
-                <template #start>
-                    <!-- <Select v-model="selectedCity" :options="cities" optionLabel="name" placeholder="Tahun Pelajaran"
-                        class="w-full md:w-56 mr-2" /> -->
-
-
-                </template>
-
-                <template #end>
-                    <!-- <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" /> -->
-                    <Button label="Edit" icon="pi pi-pencil" severity="warn" @click="confirmDeleteSelected"
-                        :disabled="!dataLulusan || !dataLulusan.length || dataLulusan.length > 2" class="mr-2" />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" class="mr-2"
-                        @click="confirmDeleteSelected" :disabled="!dataLulusan || !dataLulusan.length" />
-
-                    <!-- <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import"
-                        class="mr-2" auto /> -->
-                    <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)"
-                        class="mr-2" />
-                    <Button label="Kirim Blockchain" icon="pi pi-send" severity="help" @click="exportCSV($event)" />
-                </template>
-            </Toolbar>
-
-            <DataTable ref="dt" v-model:selection="dataLulusan" :value="products" dataKey="id" :paginator="true"
-                :rows="10" :filters="filters"
-                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                :rowsPerPageOptions="[5, 10, 25]"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
-                <template #header>
-                    <div class="flex flex-wrap gap-2 items-center justify-between">
-                        <div class="flex">
-                            <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name" placeholder="Rombel"
-                                class="w-full md:w-56 mr-2" />
-                            <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                placeholder="Kompetensi Keahlian" class="w-full md:w-56 mr-2" />
-                            <IconField>
-                                <InputIcon>
-                                    <i class="pi pi-search" />
-                                </InputIcon>
-                                <InputText v-model="filters['global'].value" placeholder="Search..." />
-                            </IconField>
-                        </div>
-
-                    </div>
-                </template>
-
-                <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
-                <Column field="code" header="NISN"></Column>
-                <Column field="code" header="NIS" sortable></Column>
-                <Column field="code" header="Tingkat" sortable></Column>
-                <Column field="code" header="Rombel" sortable></Column>
-                <Column field="name" header="Nama" sortable></Column>
-                <Column field="name" header="JK"></Column>
-                <Column field="name" header="Tpt.Lahir"></Column>
-                <Column field="name" header="Tgl.Lahir"></Column>
-                <Column field="name" header="Agama"></Column>
-                <!-- <Column field="price" header="Nilai Rerata">
-                    <template #body="slotProps">
-                        {{ formatCurrency(slotProps.data.price) }}
-                    </template>
-                </Column> -->
-                <Column field="category" header="Ayah"></Column>
-                <Column field="category" header="Ibu"></Column>
-                <Column field="category" header="Pekerjaan Ayah"></Column>
-                <Column field="category" header="Pekerjaan Ibu"></Column>
-                <Column field="category" header="Alamat"></Column>
-                <!-- <Column header="Image">
-                    <template #body="slotProps">
-                        <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
-                            :alt="slotProps.data.image" class="rounded" style="width: 64px" />
-                    </template>
-                </Column> -->
-                <!--<Column field="rating" header="Reviews" sortable style="min-width: 12rem">
-                    <template #body="slotProps">
-                        <Rating :modelValue="slotProps.data.rating" :readonly="true" />
-                    </template>
-                </Column>-->
-                <Column field="inventoryStatus" header="Status" sortable>
-                    <template #body="slotProps">
-                        <Tag :value="slotProps.data.inventoryStatus"
-                            :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
-                    </template>
-                </Column>
-                <!-- <Column header="Aksi" :exportable="false" style="min-width: 12rem">
-                    <template #body="slotProps">
-                        <Button icon="pi pi-pencil" outlined rounded class="mr-2"
-                            @click="editProduct(slotProps.data)" />
-                        <Button icon="pi pi-trash" outlined rounded severity="danger"
-                            @click="confirmDeleteProduct(slotProps.data)" />
-                    </template>
-                </Column> -->
-            </DataTable>
+            <div v-else>
+                <EmptyData />
+            </div>
         </div>
 
 
@@ -214,7 +215,6 @@
 </template>
 
 <script setup>
-
 import FileUpload from 'primevue/fileupload';
 
 import DataTable from 'primevue/datatable';
@@ -232,21 +232,19 @@ import Row from 'primevue/row';                   // optional
 import { ref, onMounted } from 'vue';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useToast } from 'primevue/usetoast';
-
 import InputText from 'primevue/inputtext';
-
-
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
-
 import RadioButton from 'primevue/radiobutton';
-
 import DataLulusanService from '@/service/DataLulusanService.js';
+
+
 
 onMounted(() => {
     DataLulusanService.getProducts().then((data) => (products.value = data));
 });
 
+const dataConnected = ref(false)
 const toast = useToast();
 const dt = ref();
 const products = ref();
@@ -366,6 +364,7 @@ const getStatusLabel = (status) => {
 
 
 import Select from 'primevue/select';
+import EmptyData from '@/components/EmptyData.vue';
 
 // select tahun ijazah
 const selectedCity = ref();

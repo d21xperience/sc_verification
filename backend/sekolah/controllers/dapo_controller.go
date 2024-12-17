@@ -24,18 +24,19 @@ type DataDapo struct {
 	Token     string
 }
 
-type DapodikService struct {
-	ClientDapo *http.Client
+type DapodikClient struct {
+	HTTPClient *http.Client
 }
 
 var setDataDapo DataDapo
 
-func NewDapodikService(dapoServiceimpl *http.Client) *DapodikService {
-	return &DapodikService{ClientDapo: dapoServiceimpl}
+func NewDapodikClient(dapoServiceimpl *http.Client) *DapodikClient {
+	return &DapodikClient{HTTPClient: dapoServiceimpl}
 }
 
 // Mendapatkan aplikasi dapodik
-func (ds DapodikService) GetDapodikApp(ctx *gin.Context) {
+func (ds DapodikClient) GetDapodikApp(ctx *gin.Context) {
+	fmt.Println("ok")
 	type reVal struct {
 		Success bool     `json:"success"`
 		Message string   `json:"message"`
@@ -56,7 +57,7 @@ func (ds DapodikService) GetDapodikApp(ctx *gin.Context) {
 	if err != nil {
 		fmt.Println("error pada request", err)
 	}
-	client := ds.ClientDapo
+	client := ds.HTTPClient
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("error pada saat akses", err)
@@ -109,7 +110,7 @@ func (ds DapodikService) GetDapodikApp(ctx *gin.Context) {
 	ctx.JSON(200, gin.H{"data": re})
 }
 
-func (ds DapodikService) LoginToDapodik(ctx *gin.Context) {
+func (ds DapodikClient) LoginToDapodik(ctx *gin.Context) {
 	// Langkah 1: Kirim permintaan POST untuk login
 	dataDapo := &setDataDapo
 
@@ -133,7 +134,7 @@ func (ds DapodikService) LoginToDapodik(ctx *gin.Context) {
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	// Membuat client HTTP dan mengirim request
-	client := ds.ClientDapo
+	client := ds.HTTPClient
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("Error sending request:", err)
@@ -201,7 +202,7 @@ func (ds DapodikService) LoginToDapodik(ctx *gin.Context) {
 	fmt.Println("Protected resource response status:", resp.Status)
 }
 
-func (ds DapodikService) GetPesertaDidik(ctx *gin.Context) {
+func (ds DapodikClient) GetPesertaDidik(ctx *gin.Context) {
 	// Langkah 1: Kirim permintaan POST untuk login
 	// dataDapo := &setDataDapo
 
@@ -229,8 +230,8 @@ func (ds DapodikService) GetPesertaDidik(ctx *gin.Context) {
 	}
 	bearerToken := "mkegY2Ps2W7b4HM"
 	req.Header.Add("Authorization", "Bearer "+bearerToken)
-	client := ds.ClientDapo
-	// client.Jar = ds.ClientDapo.Jar
+	client := ds.HTTPClient
+	// client.Jar = ds.HTTPClient.Jar
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("error di respon", err)
@@ -247,7 +248,7 @@ func (ds DapodikService) GetPesertaDidik(ctx *gin.Context) {
 	// fmt.Println(endpoint)
 }
 
-// func (ds DapodikService) getBearer() {
+// func (ds DapodikClient) getBearer() {
 
 // 	endpoint := "http://localhost:5774/rest/WsAplikasi"
 // 	sekolahID := "8a5bd957-66bc-4096-9ff1-fee096b87ba0"
@@ -261,7 +262,7 @@ func (ds DapodikService) GetPesertaDidik(ctx *gin.Context) {
 // 		fmt.Println("error sending request", err)
 // 		return ""
 // 	}
-// 	client := ds.ClientDapo
+// 	client := ds.HTTPClient
 // 	resp, err := client.Do(req)
 // 	if err != nil {
 // 		fmt.Println("error", err)

@@ -17,7 +17,7 @@ type BlockchainNetwork struct {
 	Activate bool `gorm:"default:false" json:"activate"`
 	// kolom NetworkAvailable digunakan jika logic bisnis sudah dibuat, saat ini baru tersedia ethereum, quorum dan hyperledger fabric
 	NetworkAvailable bool `gorm:"default:false" json:"network_available"`
-	// kolom Applicable digunakan pada saat membukan blockchain setting digunakan untuk menampilkan jaringan secara default
+	// Digunakan untuk menampilkan jaringan secara default
 	Applicable bool      `gorm:"default:false" json:"applicable"`
 	CreatedAt  time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt  time.Time `gorm:"autoUpdateTime" json:"updated_at"`
@@ -76,13 +76,17 @@ type Block struct {
 	TransactionCount int           `json:"transaction_count"`
 	Transactions     []Transaction `gorm:"foreignKey:BlockID;constraint:OnDelete:CASCADE" json:"transactions"`
 }
-type User struct {
-	UserID     uint      `gorm:"primaryKey;autoIncrement" json:"user_id"`
-	Username   string    `gorm:"size:50;unique" json:"username"`
-	PublicKey  string    `gorm:"type:text" json:"public_key"`
-	PrivateKey string    `gorm:"type:text" json:"private_key"`
-	CreatedAt  time.Time `gorm:"autoCreateTime" json:"created_at"`
-}
+// type User struct {
+// 	UserID      uint      `gorm:"primaryKey;autoIncrement" json:"user_id"`
+// 	Username    string    `gorm:"size:50;unique" json:"username"`
+// 	Email       string    `gorm:"size:100;unique" json:"email"`
+// 	Role        string    `gorm:"size:100" json:"role"`
+// 	TenantID    string    `gorm:"size:100" json:"tenant_id"`
+// 	Phone       string    `gorm:"size:100" json:"phone"`
+// 	AlamatJalan string    `gorm:"size:100" json:"alamat_jalan"`
+// 	Desa        string    `gorm:"size:100" json:"desa"`
+// 	CreatedAt   time.Time `gorm:"autoCreateTime" json:"created_at"`
+// }
 
 type Transaction struct {
 	TransactionID   string    `gorm:"type:uuid;default:uuid_generate_v4();primaryKey" json:"transaction_id"`

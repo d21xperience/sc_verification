@@ -17,11 +17,19 @@ import (
 // 	}
 // }
 
-func SetupDapodik(router *gin.Engine, dapoController *controllers.DapodikService) {
-	dapodikRouter := router.Group("/dapodik")
+func SetupDapodik(router *gin.Engine, dapoController *controllers.DapodikClient) {
+	dapodikRouter := router.Group("/api/v1/dapodik")
 	{
-		dapodikRouter.GET("/", dapoController.GetDapodikApp)
+		dapodikRouter.GET("", dapoController.GetDapodikApp)
 		dapodikRouter.POST("/login", dapoController.LoginToDapodik)
 		dapodikRouter.GET("/GetPesertaDidik", dapoController.GetPesertaDidik)
 	}
+
+	// dapodikInternalService := router.Group("/rest")
+	// {
+	// 	// Web Service
+	// 	// dapodikInternalService.GET("/WsAplikasi",dapoController.GetWSDapodik)
+	// 	// dapodikInternalService.POST("/WsAplikasi")
+	// 	// dapodikInternalService.DELETE("/WsAplikasi")
+	// }
 }

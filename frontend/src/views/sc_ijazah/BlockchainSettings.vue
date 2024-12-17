@@ -5,25 +5,18 @@
 // import Menu from 'primevue/menu';
 
 import Dialog from 'primevue/dialog';
-
-import DynamicDialog from 'primevue/dynamicdialog';
 import { useDialog } from 'primevue/usedialog';
-
 const dialog = useDialog();
 
 import Button from 'primevue/button';
-// import InputText from 'primevue/inputtext';
-
-
-// import { faEthereum } from '@fortawesome/free-brands-svg-icons';
 import { computed, ref, watch, onMounted } from 'vue';
 
-// const checked = ref(false);
-const BCNetworkSelected = ref(0)
+// Ambil dari database
 const BCPlatform = ref()
 const dialogSelectNetwork = ref(false)
 
-// Ambil dari database
+// Akun
+const akunBC = ref(null)
 const dialogListAccounts = ref(false)
 const dialogCreateAccount = ref(false)
 const dialogCreateNewAccount = ref(false)
@@ -124,26 +117,37 @@ const networkIndex = ref(0)
 const selectNetwork = (e) => {
     // console.log(e.target.value)
     networkIndex.value = e.target.value
+    // console.log(networkIndex.value)
     const text = e.target.textContent.trim();
-    console.log(text);
+    // console.log(text);
     networkName.value = text
     networkActive.value = true
     dialogSelectNetwork.value = false
+    setActiveCurrentBC(BCPlatform.value[networkIndex.value].network_id)
 
     // ambil data akun dari backend
+    // set aktive blockhain network
     // getBcPlatform()
 }
 onMounted(() => {
+    getAccount()
     fetchBlockchainNetworks();
 });
 
+const api = axios.create({
+    baseURL: 'http://localhost:8081', // URL utama API
+    timeout: 5000, // Waktu maksimal request (ms)
+    headers: {
+        'Content-Type': 'application/json', // Header default
+    },
+});
 // Mengambil bcplatform dari backend
 const fetchBlockchainNetworks = async () => {
     // menggunakan axios
     try {
-        const result = await axios.get('http://localhost:8081/api/v1/accounts')
+        const result = await api.get('/api/v1/accounts')
             .then(response => {
-                console.log(response.data)
+                // console.log(response.data)
                 BCPlatform.value = response.data
                 BCPlatform.value.forEach((bc, i) => {
                     // console.log(bc.applicable)
@@ -161,6 +165,66 @@ const fetchBlockchainNetworks = async () => {
 
     }
 }
+
+// Set aktive current Blockchain network
+const setActiveCurrentBC = async (id) => {
+    // console.log(id)
+    try {
+        const resp = await api.put(`/api/v1/blockchain-networks/${id}`, {
+            Applicable: true
+        })
+        console.log(resp)
+    } catch (error) {
+        console.log('error', error)
+    }
+}
+// Set diaktive current Blockchain network
+const networkDiactive = async () => {
+    networkActive.value = false
+    let id = BCPlatform.value[networkIndex.value].network_id
+    // console.log(id)
+    try {
+        const resp = await api.put(`/api/v1/blockchain-networks/${id}`, {
+            Applicable: false
+        })
+        console.log(resp)
+    } catch (error) {
+        console.log('error', error)
+    }
+}
+
+const currentAccount = ref(0)
+// Buat akun
+const getAccount = async (id) => {
+    try {
+        const resp = await api.get(`/api/v1/accounts`)
+        akunBC.value = resp
+    } catch (error) {
+        console.log('error', error)
+    }
+}
+
+const createAccount = async (id) => {
+    try {
+        const resp = await api.post(`/api/v1/account`, {
+            netword_id: id,
+            name: 'test',
+            organization: '',
+            isActive: false,
+        })
+
+        console.log(resp)
+    } catch (error) {
+        console.log("error", error)
+    }
+}
+
+
+
+
+// -------------------------------------------------------------------------------
+
+
 // Mempersingkat address
 const shortenText = (text) => {
     if (text.length <= 10) return text; // Tidak dipersingkat jika terlalu pendek
@@ -215,26 +279,14 @@ const copyText = async () => {
     }
 };
 
-// Buat akun
-const baseUrl = "http://localhot:8081/api/v1"; // URL dasar API B
-const createAccount = async () => {
-    try {
-        const resp = await axios.post(`${baseUrl}`)
-    } catch (error) {
-
-    }
-}
 
 </script>
 
 
 <template>
-
-    <!-- <DynamicDialog /> -->
-
-    <div class=" w-full bg-white shadow-md rounded-lg my-4">
-        <div class="flex justify-between">
-            <div class="flex items-center justify-between p-4 border-b">
+    <div class="w-full bg-white shadow-md mt-4 p-2">
+        <div class="flex justify-between p-2">
+            <div class="">
                 <button @click="dialogSelectNetwork = true"
                     class="rounded-full bg-slate-300 py-2 px-4 hover:opacity-80">
                     <span v-if="!networkActive">Pilih Jaringan</span>
@@ -243,7 +295,7 @@ const createAccount = async () => {
             </div>
             <div v-show="networkActive" class="flex items-center">
                 <button class="bg-red-400 py-2 px-3 rounded-full hover:opacity-70 flex items-center gap-2"
-                    @click="networkActive = false"><i class="pi pi-times"></i> Disconect</button>
+                    @click="networkDiactive"><i class="pi pi-times"></i> Disconect</button>
             </div>
         </div>
     </div>
@@ -256,26 +308,36 @@ const createAccount = async () => {
                         <button type="button" @click="openDialog" class="hover:opacity-70 border-b-2 shadow-sm">
                             <!--   <span>{{ BCPlatform[networkIndex].accounts[0].name }}</span> <i class="pi pi-angle-up "></i>-->
                         </button>
-                        <div class="text-sm text-gray-500 flex justify-center">
-                            <!--    <p> {{ shortenText(BCPlatform[networkIndex].accounts[0].address) }}</p>-->
-                            <button @click="copyText"><i class="pi pi-copy "></i></button>
-                            <div class="relative ">
-                                <!--  <p class="hidden" ref="textToCopy"> {{ BCPlatform[networkIndex].accounts[0].address }}</p>-->
-                                <p v-if="isCopied"
-                                    class="font-bold text-green-500 mt-2 absolute top-0 transition ease-in-out duration-500">
-                                    Text copied!</p>
+                        <div class=" text-center">
+                            <select name="bc-account" id="bc-account" v-model="currentAccount" class="outline-none">
+                                <option v-for="(bc, index) in BCPlatform[networkIndex].accounts" :key="index"
+                                    :value="index" class="text-3xl text-slate-600">
+                                    {{ bc.name }}
+                                </option>
+                            </select>
+                            <div class="text-sm text-gray-500  flex items-center justify-center my-2">
+                                <p>{{ shortenText(BCPlatform[networkIndex].accounts[currentAccount].address) }}</p>
+                                <button @click="copyText"><i class="pi pi-copy "></i></button>
+                                <div class="relative">
+                                    <p class="hidden" ref="textToCopy"> {{
+                                        BCPlatform[networkIndex].accounts[currentAccount].address }}</p>
+                                    <p v-if="isCopied"
+                                        class="font-bold text-green-500 w-32 mt-2 absolute top-0 transition ease-in-out duration-500">
+                                        Text copied!</p>
+                                </div>
                             </div>
                         </div>
-                        <h1 class="text-3xl font-bold mt-2">
-                            <!--  {{ BCPlatform[networkIndex].accounts[0].ammount }} {{ BCPlatform[networkIndex].unit }}-->
-                        </h1>
+                        <h3 class="text-3xl font-bold mt-2">
+                            <p> {{ BCPlatform[networkIndex].accounts[0].amount }} ETH</p>
+                        </h3>
                         <p class="text-gray-500">
+
                             <!-- konversikan ke mata uang -->
                             <!-- $ {{ convertToFiatCurrency(BCPlatform[networkIndex].account[0].amount) }} USD -->
-                            $ {{ fiatAmount ?? 'Loading...' }} USD
+                            <!-- $ {{ fiatAmount ?? 'Loading...' }} USD -->
                         </p>
                     </div>
-                    <div class="flex justify-center space-x-4 mt-4">
+                    <div class="flex justify-center space-x-4 mt-4 pb-2 border-b-2">
                         <div class="flex flex-col items-center">
                             <Button icon="pi pi-plus" severity="info" aria-label="User" rounded />
                             <p class="text-sm mt-1">
@@ -291,32 +353,32 @@ const createAccount = async () => {
                         </div>
                         <div class="flex flex-col items-center">
                             <Button icon="pi pi-exchange" severity="info" aria-label="pertukaran" rounded />
-                            <p class="text-sm mt-1">
-                                Pertukaran
+                            <p class="text-xs mt-1">
+                                Smartcontract
                             </p>
                         </div>
-                        <div class="flex flex-col items-center">
+                        <!-- <div class="flex flex-col items-center">
                             <Button icon="pi pi-random" severity="info" aria-label="User" rounded />
                             <p class="text-sm mt-1">
                                 Bridge
                             </p>
-                        </div>
+                        </div> -->
                         <div class="flex flex-col items-center">
                             <Button icon="pi pi-briefcase" severity="info" aria-label="User" rounded />
                             <p class="text-sm mt-1">
                                 Portofolio
                             </p>
                         </div>
-                        <div v-show="networkIndex <= 1" class="flex flex-col items-center">
+                        <!-- <div v-show="networkIndex <= 1" class="flex flex-col items-center">
                             <Button icon="pi pi-qrcode" severity="info" aria-label="User" rounded
                                 @click="func_openMyQrCodeAccount" />
                             <p class="text-sm mt-1">
                                 Terima
                             </p>
-                        </div>
+                        </div> -->
 
                     </div>
-                    <div class="flex justify-center mt-6">
+                    <!-- <div class="flex justify-center mt-6">
                         <div class="flex space-x-8">
                             <a class="text-blue-500 border-b-2 border-blue-500 pb-1" href="#">
                                 Token
@@ -328,7 +390,7 @@ const createAccount = async () => {
                                 Aktivitas
                             </a>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="mt-4">
                         <RouterView></RouterView>
                         <!-- <div class="flex items-center justify-between py-2 border-b">
@@ -455,7 +517,8 @@ const createAccount = async () => {
             <div class="flex flex-col">
                 <div class="mb-2  p-2 rounded-lg cursor-pointer">
                     <label for="">Nama akun</label>
-                    <input type="text" placeholder="Account - 2" class="w-full p-2">
+                    <!-- Placeholder diisi dengan nama akun yang sedang aktif jika tidak aktif tambahkan nama akun secara default -->
+                    <input v-model="akunBC" type="text" placeholder="Account - 1" class="w-full p-2">
                 </div>
 
                 <div class="flex justify-between gap-2 mt-2">

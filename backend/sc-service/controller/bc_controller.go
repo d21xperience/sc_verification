@@ -112,3 +112,12 @@ func (bc *BlockchainController) DeleteBlockchainNetwork(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Network deleted"})
 }
+
+// func (bc *BlockchainController) ActiveBlockchainNetwork(c *gin.Context) {
+// 	id := c.Param("chainID")
+// 	if err := bc.DB.Delete(&model.BlockchainNetwork{}, id).Error; err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mengaktifkan jaringan!"})
+// 		return
+// 	}
+// 	c.JSON(http.StatusOK, gin.H{"message": "Jaringan diaktifkan"})
+// }

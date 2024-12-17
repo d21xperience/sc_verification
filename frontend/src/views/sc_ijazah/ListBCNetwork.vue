@@ -13,8 +13,17 @@
                 <Button label="Delete" icon="pi pi-trash" severity="danger" class="mr-2" @click="confirmDeleteSelected"
                     :disabled="!selectedBCNetworks || !selectedBCNetworks.length" />
                 <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)" class="mr-2" />
-                <Button label="Aktifkan" icon="pi pi-upload" severity="help" @click="activeBCNetworkDialog = true"
-                    class="mr-2" />
+                <!-- <Button label="Aktifkan" icon="pi pi-check" severity="info" @click="activeBCNetworkDialog = true"
+                    class="mr-2"
+                    :disabled="!selectedBCNetworks || !selectedBCNetworks.length || selectedBCNetworks.length >= 2" /> -->
+                <Button v-slot="slotProps" asChild>
+                    <button @click="activeBCNetworkDialog = true"
+                        class="mr-2 border rounded-lg p-2 hover:bg-slate-400 cursor-pointer"
+                        :disabled="!selectedBCNetworks || !selectedBCNetworks.length || selectedBCNetworks.length >= 2">
+                        <span class="font-medium">Aktifkan</span>
+                    </button>
+                </Button>
+
             </template>
         </Toolbar>
 
@@ -51,8 +60,8 @@
                 <template #body="slotProps">
                     <!-- <button @click="activeBCNetworkDialog = true" class="rounded-full border border-slate-500 w-4 h-4"
                         :class="{ 'bg-green-800': slotProps.data.activate }"></button> -->
-                    <div class="rounded-full border border-slate-500 w-4 h-4"
-                        :class="{ 'bg-green-800': slotProps.data.activate }"></div>
+                    <div class="rounded-full border border-slate-500 w-4 h-4 "
+                        :class="[slotProps.data.activate ? 'bg-green-400' : 'bg-slate-400']"></div>
 
                 </template>
             </Column>
@@ -73,7 +82,7 @@
             </Column>
             <Column field="block_explorer" header="Explorer URL">
                 <template #body="slotProps">
-                    {{ slotProps.data.rpc_url }}
+                    {{ slotProps.data.block_explorer }}
                 </template>
             </Column>
             <!-- <Column header="Image">
@@ -113,28 +122,30 @@
             <!-- <img v-if="BCNetwork.image" :src="`https://primefaces.org/cdn/primevue/images/product/${BCNetwork.image}`"
                     :alt="BCNetwork.image" class="block m-auto pb-4" /> -->
             <div>
-                <label for="name" class="block font-bold">NISN</label>
-                <InputText id="name" v-model.trim="BCNetworks.network_name" required="true" autofocus
-                    :invalid="submitted && !BCNetworks.network_name" fluid />
-                <small v-if="submitted && !BCNetworks.network_name" class="text-red-500">NISN is required.</small>
+                <label for="name" class="block font-bold">Nama Jaringan</label>
+                <InputText id="name" v-model.trim="selectedBCNetworks[0].network_name" required="true" autofocus
+                    :invalid="submitted && !selectedBCNetworks[0].network_name" fluid />
+                <small v-if="submitted && !selectedBCNetworks[0].network_name" class="text-red-500">NISN is
+                    required.</small>
             </div>
             <div>
-                <label for="name" class="block font-bold ">Nama</label>
+                <label for="name" class="block font-bold ">Chain ID</label>
                 <InputText id="name" v-model.trim="BCNetworks.network_name" required="true" autofocus
                     :invalid="submitted && !BCNetworks.network_name" fluid />
                 <small v-if="submitted && !BCNetworks.network_name" class="text-red-500">Nama is required.</small>
             </div>
             <div>
-                <label for="name" class="block font-bold ">Rerata Nilai</label>
+                <label for="name" class="block font-bold ">Tipe Jaringan</label>
                 <InputText id="name" v-model.trim="BCNetwork.price" required="true" autofocus
                     :invalid="submitted && !BCNetwork.price" fluid />
                 <small v-if="submitted && !BCNetwork.price" class="text-red-500">Nilai is required.</small>
             </div>
             <div>
-                <label for="name" class="block font-bold ">Thn Lulus</label>
-                <InputText id="name" v-model.trim="BCNetwork.category" required="true" autofocus
-                    :invalid="submitted && !BCNetwork.category" fluid />
-                <small v-if="submitted && !BCNetwork.category" class="text-red-500">Thn lulus is required.</small>
+                <label for="name" class="block font-bold ">RPC URL</label>
+                <InputText id="name" v-model.trim="selectedBCNetworks[0].rpc_url" required="true" autofocus
+                    :invalid="submitted && !selectedBCNetworks[0].rpc_url" fluid />
+                <small v-if="submitted && !selectedBCNetworks[0].rpc_url" class="text-red-500">Thn lulus is
+                    required.</small>
             </div>
             <!-- <div>
                     <label for="description" class="block font-bold mb-3">Description</label>
@@ -198,6 +209,18 @@
         <template #footer>
             <Button label="No" icon="pi pi-times" text @click="activeBCNetworkDialog = false" />
             <Button label="Yes" icon="pi pi-check" @click="activingBcNetwork" />
+        </template>
+    </Dialog>
+    <Dialog v-model:visible="activeBCNetworkDialogInfo" :style="{ width: '450px' }" header="Confirm" :modal="true">
+        <div class="flex items-center gap-4">
+            <i class="pi pi-times !text-3xl" />
+            <!-- <span v-if="BCNetwork">Are you sure you want to delete <b>{{ BCNetwork.network_name }}</b>?</span> -->
+            <span>{{ activeBCNetworkInfo }}</span>
+            <!-- <span>Sudah ada</span> -->
+        </div>
+        <template #footer>
+            <Button label="Ok" icon="pi pi-check" text @click="activeBCNetworkDialogInfo = false" />
+            <!-- <Button label="Yes" icon="pi pi-check" @click="activingBcNetwork" /> -->
         </template>
     </Dialog>
     <Toast />
@@ -335,6 +358,7 @@ const BCNetworks = ref(null)
 import axios from 'axios';
 
 // Membuat instance Axios
+// Pindahkan ke vuex
 const api = axios.create({
     baseURL: 'http://localhost:8081', // URL utama API
     timeout: 5000, // Waktu maksimal request (ms)
@@ -342,9 +366,6 @@ const api = axios.create({
         'Content-Type': 'application/json', // Header default
     },
 });
-
-
-
 
 const fetchData = async () => {
     try {
@@ -503,20 +524,47 @@ const getStatusLabel = (status) => {
 // Active BC Network
 const activeBCNetwork = ref(null);
 const activeBCNetworkDialog = ref(false);
+const activeBCNetworkInfo = ref('');
+const activeBCNetworkDialogInfo = ref(false);
 const activingBcNetwork = () => {
     activeBCNetworkDialog.value = !activeBCNetworkDialog.value
-    let tes = ''
+    let cekNetwork = false
+    let id = ''
     selectedBCNetworks.value.forEach(bc => {
-        console.log(bc.chain_id)
+        // console.log(bc.chain_id)
         if (bc.chain_id != 1 && bc.chain_id != 12) {
-
-            tes =  "Jaringan belum tersedia"
+            cekNetwork = false
+            activeBCNetworkInfo.value = "Maaf, saat ini jaringan belum tersedia"
         } else {
-            tes = "Jaringan sudah tersedia"
+            cekNetwork = true
+            id = bc.network_id
+            activeBCNetworkInfo.value = "Jaringan sudah tersedia"
         }
-
-    });
+    })
     selectedBCNetworks.value = null
-    console.log(tes)
+    // console.log(cekNetwork)
+    activeBCNetworkDialogInfo.value = true
+    if (cekNetwork) {
+        const tes = sendActiveBCNetwork(id)
+        console.log(tes)
+    }
 }
+
+
+const sendActiveBCNetwork = async (id) => {
+    try {
+        // console.log(id)
+        const response = await api.put(`/api/v1/blockchain-networks/${id}`, {
+            Activate: true
+        })
+        // console.log(response.data);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+
+
+
+
 </script>

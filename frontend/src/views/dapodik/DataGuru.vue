@@ -1,138 +1,140 @@
 <template>
 
-    <div>
-
+    <div class="container mx-auto p-8">
         <div class="card">
             <div class="flex flex-wrap justify-between my-2">
-                <h4 class="font-bold text-2xl lg:text-lg my-2">Data Guru </h4>
-                <div>
-                    <Select v-model="selectedCity" :options="cities" optionLabel="name" placeholder="Tahun Pelajaran"
-                        class="w-full md:w-56 mr-2" />
-                </div>
-
+                <h1 class="text-2xl font-bold">Data Guru </h1>
             </div>
-            <Toolbar class="mb-2">
-                <template #start>
+            <div v-if="dataConnected">
+                <Toolbar class="mb-2">
+                    <template #start>
+                        <Select v-model="selectedCity" :options="cities" optionLabel="name"
+                            placeholder="Tahun Pelajaran" class="w-full md:w-56 mr-2" />
 
 
+                    </template>
 
-                </template>
+                    <template #end>
+                        <!-- <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" /> -->
+                        <!-- <Button label="Delete" icon="pi pi-trash" severity="danger" class="mr-2"
+                            @click="confirmDeleteSelected" :disabled="!dataLulusan || !dataLulusan.length" /> -->
+                        <!-- <Button label="Edit" icon="pi pi-pencil" severity="warning" @click="confirmDeleteSelected"
+                            :disabled="!dataLulusan || !dataLulusan.length" class="mr-2" /> -->
+                        <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import"
+                            chooseLabel="Import" class="mr-2" auto />
+                        <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)" />
+                    </template>
+                </Toolbar>
+                <DataTable ref="dt" v-model:selection="dataLulusan" :value="products" dataKey="id" :paginator="true"
+                    :rows="10" :filters="filters"
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    :rowsPerPageOptions="[5, 10, 25]"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
+                    <template #header>
+                        <div class="flex flex-wrap gap-2 items-center justify-between">
+                            <h4 class="m-0 font-bold text-xl"> </h4>
+                            <div class="flex">
+                                <!-- <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name" placeholder="Rombel"
+                                    class="w-full md:w-56 mr-2" />
+                                <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
+                                    placeholder="Kompetensi Keahlian" class="w-full md:w-56 mr-2" /> -->
+                                <IconField>
+                                    <InputIcon>
+                                        <i class="pi pi-search" />
+                                    </InputIcon>
+                                    <InputText v-model="filters['global'].value" placeholder="Search..." />
+                                </IconField>
+                            </div>
 
-                <template #end>
-                    <!-- <Button label="New" icon="pi pi-plus" severity="success" class="mr-2" @click="openNew" /> -->
-                    <!-- <Button label="Delete" icon="pi pi-trash" severity="danger" class="mr-2"
-                        @click="confirmDeleteSelected" :disabled="!dataLulusan || !dataLulusan.length" /> -->
-                    <!-- <Button label="Edit" icon="pi pi-pencil" severity="warning" @click="confirmDeleteSelected"
-                        :disabled="!dataLulusan || !dataLulusan.length" class="mr-2" /> -->
-                    <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import"
-                        class="mr-2" auto />
-                    <Button label="Export" icon="pi pi-upload" severity="help" @click="exportCSV($event)" />
-                </template>
-            </Toolbar>
-
-            <DataTable ref="dt" v-model:selection="dataLulusan" :value="products" dataKey="id" :paginator="true"
-                :rows="10" :filters="filters"
-                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                :rowsPerPageOptions="[5, 10, 25]"
-                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products">
-                <template #header>
-                    <div class="flex flex-wrap gap-2 items-center justify-between">
-                        <h4 class="m-0 font-bold text-xl"> </h4>
-                        <div class="flex">
-                            <!-- <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name" placeholder="Rombel"
-                                class="w-full md:w-56 mr-2" />
-                            <Select v-model="selectedJurusan" :options="jurusan" optionLabel="name"
-                                placeholder="Kompetensi Keahlian" class="w-full md:w-56 mr-2" /> -->
-                            <IconField>
-                                <InputIcon>
-                                    <i class="pi pi-search" />
-                                </InputIcon>
-                                <InputText v-model="filters['global'].value" placeholder="Search..." />
-                            </IconField>
                         </div>
+                    </template>
 
-                    </div>
-                </template>
-
-                <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
-                <Column field="name" header="Induk" sortable></Column>
-                <Column field="name" header="Nama" sortable></Column>
-                <Column field="code" header="JK" sortable></Column>
-                <Column field="code" header="Mapel yg diampu" sortable></Column>
-                <!-- <Column field="name" header="Tpt.Lahir"></Column>
-                <Column field="price" header="Tgl.Lahir">
-                    <template #body="slotProps">
-                        {{ formatCurrency(slotProps.data.price) }}
-                    </template>
-                </Column> -->
-                <Column field="category" header="Sts Kepegawaian" sortable style="min-width: 10rem"></Column>
-                <!-- <Column header="Image">
-                    <template #body="slotProps">
-                        <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
-                            :alt="slotProps.data.image" class="rounded" style="width: 64px" />
-                    </template>
-                </Column> -->
-                <!--<Column field="rating" header="Reviews" sortable style="min-width: 12rem">
-                    <template #body="slotProps">
-                        <Rating :modelValue="slotProps.data.rating" :readonly="true" />
-                    </template>
-                </Column>-->
-                <!-- <Column field="inventoryStatus" header="Status" sortable style="min-width: 12rem">
-                    <template #body="slotProps">
-                        <Tag :value="slotProps.data.inventoryStatus"
-                            :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
-                    </template>
-                </Column>
-                <Column header="Aksi" :exportable="false" style="min-width: 12rem">
-                    <template #body="slotProps">
-                        <Button icon="pi pi-pencil" outlined rounded class="mr-2"
-                            @click="editProduct(slotProps.data)" />
-                        <Button icon="pi pi-trash" outlined rounded severity="danger"
-                            @click="confirmDeleteProduct(slotProps.data)" />
-                    </template>
-                </Column> -->
-            </DataTable>
+                    <Column selectionMode="multiple" style="width: 3rem" :exportable="false"></Column>
+                    <Column field="name" header="Induk" sortable></Column>
+                    <Column field="name" header="Nama" sortable></Column>
+                    <Column field="code" header="JK" sortable></Column>
+                    <Column field="code" header="Mapel yg diampu" sortable></Column>
+                    <!-- <Column field="name" header="Tpt.Lahir"></Column>
+                    <Column field="price" header="Tgl.Lahir">
+                        <template #body="slotProps">
+                            {{ formatCurrency(slotProps.data.price) }}
+                        </template>
+                    </Column> -->
+                    <Column field="category" header="Sts Kepegawaian" sortable style="min-width: 10rem"></Column>
+                    <!-- <Column header="Image">
+                        <template #body="slotProps">
+                            <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
+                                :alt="slotProps.data.image" class="rounded" style="width: 64px" />
+                        </template>
+                    </Column> -->
+                    <!--<Column field="rating" header="Reviews" sortable style="min-width: 12rem">
+                        <template #body="slotProps">
+                            <Rating :modelValue="slotProps.data.rating" :readonly="true" />
+                        </template>
+                    </Column>-->
+                    <!-- <Column field="inventoryStatus" header="Status" sortable style="min-width: 12rem">
+                        <template #body="slotProps">
+                            <Tag :value="slotProps.data.inventoryStatus"
+                                :severity="getStatusLabel(slotProps.data.inventoryStatus)" />
+                        </template>
+                    </Column>
+                    <Column header="Aksi" :exportable="false" style="min-width: 12rem">
+                        <template #body="slotProps">
+                            <Button icon="pi pi-pencil" outlined rounded class="mr-2"
+                                @click="editProduct(slotProps.data)" />
+                            <Button icon="pi pi-trash" outlined rounded severity="danger"
+                                @click="confirmDeleteProduct(slotProps.data)" />
+                        </template>
+                    </Column> -->
+                </DataTable>
+            </div>
+            <div v-else>
+                <EmptyData />
+            </div>
         </div>
 
-        <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Tambah data lulusan" :modal="true">
-            <div class="flex flex-col gap-6">
-                <!-- <img v-if="product.image" :src="`https://primefaces.org/cdn/primevue/images/product/${product.image}`"
+
+    </div>
+    <!-- Dialog start -->
+    <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Tambah data lulusan" :modal="true">
+        <div class="flex flex-col gap-6">
+            <!-- <img v-if="product.image" :src="`https://primefaces.org/cdn/primevue/images/product/${product.image}`"
                     :alt="product.image" class="block m-auto pb-4" /> -->
-                <div>
-                    <label for="name" class="block font-bold">NISN</label>
-                    <InputText id="name" v-model.trim="product.code" required="true" autofocus
-                        :invalid="submitted && !product.code" fluid />
-                    <small v-if="submitted && !product.code" class="text-red-500">NISN is required.</small>
-                </div>
-                <div>
-                    <label for="name" class="block font-bold ">Nama</label>
-                    <InputText id="name" v-model.trim="product.name" required="true" autofocus
-                        :invalid="submitted && !product.name" fluid />
-                    <small v-if="submitted && !product.name" class="text-red-500">Nama is required.</small>
-                </div>
-                <div>
-                    <label for="name" class="block font-bold ">Rerata Nilai</label>
-                    <InputText id="name" v-model.trim="product.price" required="true" autofocus
-                        :invalid="submitted && !product.price" fluid />
-                    <small v-if="submitted && !product.price" class="text-red-500">Nilai is required.</small>
-                </div>
-                <div>
-                    <label for="name" class="block font-bold ">Thn Lulus</label>
-                    <InputText id="name" v-model.trim="product.category" required="true" autofocus
-                        :invalid="submitted && !product.category" fluid />
-                    <small v-if="submitted && !product.category" class="text-red-500">Thn lulus is required.</small>
-                </div>
-                <!-- <div>
+            <div>
+                <label for="name" class="block font-bold">NISN</label>
+                <InputText id="name" v-model.trim="product.code" required="true" autofocus
+                    :invalid="submitted && !product.code" fluid />
+                <small v-if="submitted && !product.code" class="text-red-500">NISN is required.</small>
+            </div>
+            <div>
+                <label for="name" class="block font-bold ">Nama</label>
+                <InputText id="name" v-model.trim="product.name" required="true" autofocus
+                    :invalid="submitted && !product.name" fluid />
+                <small v-if="submitted && !product.name" class="text-red-500">Nama is required.</small>
+            </div>
+            <div>
+                <label for="name" class="block font-bold ">Rerata Nilai</label>
+                <InputText id="name" v-model.trim="product.price" required="true" autofocus
+                    :invalid="submitted && !product.price" fluid />
+                <small v-if="submitted && !product.price" class="text-red-500">Nilai is required.</small>
+            </div>
+            <div>
+                <label for="name" class="block font-bold ">Thn Lulus</label>
+                <InputText id="name" v-model.trim="product.category" required="true" autofocus
+                    :invalid="submitted && !product.category" fluid />
+                <small v-if="submitted && !product.category" class="text-red-500">Thn lulus is required.</small>
+            </div>
+            <!-- <div>
                     <label for="description" class="block font-bold mb-3">Description</label>
                     <Textarea id="description" v-model="product.description" required="true" rows="3" cols="20" fluid />
                 </div> -->
-                <!-- <div>
+            <!-- <div>
                     <label for="inventoryStatus" class="block font-bold mb-3">Inventory Status</label>
                     <Select id="inventoryStatus" v-model="product.inventoryStatus" :options="statuses"
                         optionLabel="label" placeholder="Select a Status" fluid></Select>
                 </div> -->
 
-                <!-- <div>
+            <!-- <div>
                     <span class="block font-bold mb-4">Category</span>
                     <div class="grid grid-cols-12 gap-4">
                         <div class="flex items-center gap-2 col-span-6">
@@ -156,7 +158,7 @@
                     </div>
                 </div> -->
 
-                <!-- <div class="grid grid-cols-12 gap-4">
+            <!-- <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-6">
                         <label for="price" class="block font-bold mb-3">Price</label>
                         <InputNumber id="price" v-model="product.price" mode="currency" currency="USD" locale="en-US"
@@ -167,39 +169,40 @@
                         <InputNumber id="quantity" v-model="product.quantity" integeronly fluid />
                     </div>
                 </div> -->
-            </div>
+        </div>
 
-            <template #footer>
-                <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
-                <Button label="Save" icon="pi pi-check" @click="saveProduct" />
-            </template>
-        </Dialog>
+        <template #footer>
+            <Button label="Cancel" icon="pi pi-times" text @click="hideDialog" />
+            <Button label="Save" icon="pi pi-check" @click="saveProduct" />
+        </template>
+    </Dialog>
 
-        <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
-            <div class="flex items-center gap-4">
-                <i class="pi pi-exclamation-triangle !text-3xl" />
-                <span v-if="product">Are you sure you want to delete <b>{{ product.name }}</b>?</span>
-            </div>
-            <template #footer>
-                <Button label="No" icon="pi pi-times" text @click="deleteProductDialog = false" />
-                <Button label="Yes" icon="pi pi-check" @click="deleteProduct" />
-            </template>
-        </Dialog>
+    <Dialog v-model:visible="deleteProductDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+        <div class="flex items-center gap-4">
+            <i class="pi pi-exclamation-triangle !text-3xl" />
+            <span v-if="product">Are you sure you want to delete <b>{{ product.name }}</b>?</span>
+        </div>
+        <template #footer>
+            <Button label="No" icon="pi pi-times" text @click="deleteProductDialog = false" />
+            <Button label="Yes" icon="pi pi-check" @click="deleteProduct" />
+        </template>
+    </Dialog>
 
-        <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
-            <div class="flex items-center gap-4">
-                <i class="pi pi-exclamation-triangle !text-3xl" />
-                <span v-if="product">Apakah data lulusan akan dihapus?</span>
-            </div>
-            <template #footer>
-                <Button label="Tidak" icon="pi pi-times" text @click="deleteProductsDialog = false" />
-                <Button label="Ya" icon="pi pi-check" text @click="deletedataLulusan" />
-            </template>
-        </Dialog>
-    </div>
+    <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
+        <div class="flex items-center gap-4">
+            <i class="pi pi-exclamation-triangle !text-3xl" />
+            <span v-if="product">Apakah data lulusan akan dihapus?</span>
+        </div>
+        <template #footer>
+            <Button label="Tidak" icon="pi pi-times" text @click="deleteProductsDialog = false" />
+            <Button label="Ya" icon="pi pi-check" text @click="deletedataLulusan" />
+        </template>
+    </Dialog>
+
 </template>
 
 <script setup>
+import EmptyData from '@/components/EmptyData.vue';
 
 import FileUpload from 'primevue/fileupload';
 
@@ -232,7 +235,7 @@ import DataLulusanService from '@/service/DataLulusanService.js';
 onMounted(() => {
     DataLulusanService.getProducts().then((data) => (products.value = data));
 });
-
+const dataConnected = ref(false)
 const toast = useToast();
 const dt = ref();
 const products = ref();

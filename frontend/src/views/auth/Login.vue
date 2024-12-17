@@ -23,10 +23,11 @@ const login = async () => {
 
 
 <template>
-    <div class="flex justify-center items-center font-[sans-serif] h-full min-h-screen p-4"
-        style="background-image: url(https://readymadeui.com/background-image.webp); background-repeat: no-repeat; background-size: cover;">
+    <!-- <div class="flex justify-center items-center font-[sans-serif] h-full min-h-screen p-4"
+        style="background-image: url(https://readymadeui.com/background-image.webp); background-repeat: no-repeat; background-size: cover;"> -->
+    <div class="flex justify-center items-center h-full min-h-screen p-4 bg-slate-900">
         <div class="max-w-md w-full mx-auto">
-            <form class="bg-opacity-70 bg-white rounded-2xl p-6 shadow-[0_2px_16px_-3px_rgba(6,81,237,0.3)]">
+            <form class=" bg-white rounded-2xl p-6 shadow-[0_2px_16px_-3px_rgba(6,81,237,0.3)]">
                 <div class="mb-12">
                     <h3 class="text-gray-800 text-3xl font-extrabold">Sign in</h3>
                 </div>
@@ -35,7 +36,7 @@ const login = async () => {
                     <div class="relative flex items-center">
                         <input name="email" type="text" required
                             class="bg-transparent w-full text-sm text-gray-800 border-b border-gray-400 focus:border-gray-800 px-2 py-3 outline-none placeholder:text-gray-800"
-                            placeholder="Email / NUPTK / NIK" />
+                            placeholder="Email / NIK" />
                         <svg xmlns="http://www.w3.org/2000/svg" fill="#333" stroke="#333"
                             class="w-[18px] h-[18px] absolute right-2" viewBox="0 0 682.667 682.667">
                             <defs>
@@ -69,6 +70,34 @@ const login = async () => {
                     </div>
                 </div>
 
+
+                <div class="mt-12">
+                    <!-- <div
+                        style="position: relative; min-width: 250px; max-width: 372px; height: 88px; background-color: rgb(22, 25, 29); border-radius: 13px; display: flex; align-items: center; padding: 24px; box-sizing: border-box; box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 4px 1px;"> -->
+                    <div class="relative my-3">
+                        <!-- <span
+                            style="position: absolute; top: 4px; color: red; font-size: 13px; display: block; font-family: &quot;Plus Jakarta Sans&quot;, sans-serif;">Session
+                            expired. Please try again!</span> -->
+                        <div class="flex items-center cursor-pointer">
+                            <div
+                                style="width: 40px; height: 40px; background-color: rgb(33, 37, 44); border: 2px solid rgba(240, 242, 244, 0.1); border-radius: 10px; margin-right: 12px; transition: border-color 0.25s; box-sizing: border-box; display: flex; justify-content: center; align-items: center;">
+                            </div>
+                            <!-- <span
+                                style="font-size: 18.5px; font-weight: 500; color: rgb(245, 249, 255); font-family: &quot;Plus Jakarta Sans&quot;, sans-serif;">I'm not a robot -->
+                            <span class="">I'm not a robot
+                            </span>
+                        </div>
+                    </div>
+                    <button type="button"
+                        class="w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded-full text-white bg-gray-800 hover:bg-[#222] focus:outline-none">
+                        Sign in
+                    </button>
+                    <!-- <p class="text-gray-800 text-sm text-center mt-6">Don't have an account <a
+                            href="javascript:void(0);"
+                            class="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">Register here</a>
+                    </p> -->
+                </div>
+
                 <div class="flex flex-wrap items-center justify-between gap-4 mt-6">
                     <div class="flex items-center">
                         <input id="remember-me" name="remember-me" type="checkbox"
@@ -82,17 +111,6 @@ const login = async () => {
                             Forgot Password?
                         </a>
                     </div>
-                </div>
-
-                <div class="mt-12">
-                    <button type="button"
-                        class="w-full py-2.5 px-4 text-sm font-semibold tracking-wider rounded-full text-white bg-gray-800 hover:bg-[#222] focus:outline-none">
-                        Sign in
-                    </button>
-                    <p class="text-gray-800 text-sm text-center mt-6">Don't have an account <a
-                            href="javascript:void(0);"
-                            class="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap">Register here</a>
-                    </p>
                 </div>
 
                 <hr class="my-6 border-gray-400" />
@@ -120,13 +138,13 @@ const login = async () => {
                                 data-original="#eb4132" />
                         </svg>
                     </button>
-                    <button type="button" class="border-none outline-none">
-                        <!-- <svg xmlns="http://www.w3.org/2000/svg" width="30px" fill="#000" viewBox="0 0 22.773 22.773">
+                    <!--<button type="button" class="border-none outline-none">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="30px" fill="#000" viewBox="0 0 22.773 22.773">
                             <path
                                 d="M15.769 0h.162c.13 1.606-.483 2.806-1.228 3.675-.731.863-1.732 1.7-3.351 1.573-.108-1.583.506-2.694 1.25-3.561C13.292.879 14.557.16 15.769 0zm4.901 16.716v.045c-.455 1.378-1.104 2.559-1.896 3.655-.723.995-1.609 2.334-3.191 2.334-1.367 0-2.275-.879-3.676-.903-1.482-.024-2.297.735-3.652.926h-.462c-.995-.144-1.798-.932-2.383-1.642-1.725-2.098-3.058-4.808-3.306-8.276v-1.019c.105-2.482 1.311-4.5 2.914-5.478.846-.52 2.009-.963 3.304-.765.555.086 1.122.276 1.619.464.471.181 1.06.502 1.618.485.378-.011.754-.208 1.135-.347 1.116-.403 2.21-.865 3.652-.648 1.733.262 2.963 1.032 3.723 2.22-1.466.933-2.625 2.339-2.427 4.74.176 2.181 1.444 3.457 3.028 4.209z"
                                 data-original="#000000"></path>
                         </svg> -->
-                        <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="25pt" height="25pt"
+                    <!-- <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="25pt" height="25pt"
                             viewBox="0 0 120.000000 117.000000" preserveAspectRatio="xMidYMid meet">
 
                             <g transform="translate(0.000000,117.000000) scale(0.100000,-0.100000)" fill="#000000"
@@ -138,16 +156,16 @@ const login = async () => {
 -19 30 -26 c45 -39 154 -94 225 -112 82 -21 206 -21 288 0 71 18 180 73 225
 112 l30 26 -25 19 c-41 31 -151 86 -206 102 -65 20 -193 28 -259 18z" />
                             </g>
-                        </svg>
-                    </button>
-                    <button type="button" class="border-none outline-none">
+                        </svg> 
+                    </button>-->
+                    <!-- <button type="button" class="border-none outline-none">
                         <svg xmlns="http://www.w3.org/2000/svg" width="30px" fill="#007bff"
                             viewBox="0 0 167.657 167.657">
                             <path
                                 d="M83.829.349C37.532.349 0 37.881 0 84.178c0 41.523 30.222 75.911 69.848 82.57v-65.081H49.626v-23.42h20.222V60.978c0-20.037 12.238-30.956 30.115-30.956 8.562 0 15.92.638 18.056.919v20.944l-12.399.006c-9.72 0-11.594 4.618-11.594 11.397v14.947h23.193l-3.025 23.42H94.026v65.653c41.476-5.048 73.631-40.312 73.631-83.154 0-46.273-37.532-83.805-83.828-83.805z"
                                 data-original="#010002"></path>
                         </svg>
-                    </button>
+                    </button> -->
                 </div>
             </form>
         </div>

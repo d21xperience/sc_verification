@@ -18,6 +18,24 @@ func NewAccountController(db *gorm.DB) *AccountController {
 
 // Tambah akun baru
 func (ac *AccountController) CreateAccount(c *gin.Context) {
+	// Cek query; query berisi chainID jaringan mana yang akan dibuat akunnya
+
+	var chainID = c.Query("chainID")
+	switch chainID {
+	// Jaringan Ethereum dan Quorum
+	case "1":
+		{
+			// Buat akun baru
+		}
+		// Jaringan Hyperledger fabric
+	case "2":
+		{
+
+		}
+	default:
+		{
+		}
+	}
 	var account model.Account
 	if err := c.ShouldBindJSON(&account); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -28,6 +46,7 @@ func (ac *AccountController) CreateAccount(c *gin.Context) {
 	// 	NetURL: "",
 	// }
 
+	// simpan di database informasi akun yang telah dibuat
 	if err := ac.DB.Create(&account).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -95,12 +114,52 @@ func (ac *AccountController) DeleteAccount(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Account deleted"})
 }
 
-// // Set Active account
-// func (ac *AccountController) SetAccountActive(c *gin.Context) {
-
+// CRYPTO BLOCKCHAIN NETWORK
+// func getBlockchainClient(platform string) (pkg.Blockchain, error) {
+// 	switch platform {
+// 	case "ethereum":
+// 		client := &pkg.EthereumClient{ClientInfo: config.ETHClientInfo}
+// 		client.Connect()
+// 		return client, nil
+// 	case "quorum":
+// 		client := &pkg.QuorumClient{}
+// 		client.Connect()
+// 		return client, nil
+// 	case "fabric":
+// 		client := &pkg.FabricClient{}
+// 		client.Connect()
+// 		return client, nil
+// 	default:
+// 		return nil, fmt.Errorf("unsupported blockchain platform")
+// 	}
 // }
 
-// // Set Import account
+// Send Crypto
+// func (ac *AccountController) SendCrypto(c *gin.Context) {
+// 	platform := c.Query("platform")
+// 	client, err := getBlockchainClient(platform)
+// 	if err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
+// 	address := c.Query("address")
+// 	amountStr := c.Query("amount")
+// 	amount, _ := new(big.Int).SetString(amountStr, 10)
+
+// 	err = client.SendCrypto(address, amount)
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Transfer failed"})
+// 		return
+// 	}
+// 	c.JSON(http.StatusOK, gin.H{"status": "Transfer successful"})
+// }
+
+// Set Active account
+// func (ac *AccountController) SetAccountActive(c *gin.Context) {
+// 	var chainID = c.Query("chainID")
+// }
+
+// Set Import account
 // func (ac *AccountController) ImportAccount(c *gin.Context) {
 
 // }
